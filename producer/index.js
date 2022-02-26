@@ -1,9 +1,9 @@
 const express = require("express");
-const { Sequelize } = require("sequelize");
+const { Sequelize, json } = require("sequelize");
 const sequelize = require("sequelize");
 const app = express();
 let q = "tasks";
-let open;
+let open= require("amqplib").connect(process.env.RABBIT_URI);
 
 const startUp = async () => {
   try {
@@ -22,21 +22,22 @@ const startUp = async () => {
     console.warn(error);
   }
 };
-setTimeout(startUp, 30000);
+setTimeout(startUp, 40000);
 
 const sendToQueue = async (msg, res) => {
   try {
     const conn = await open;
-    const ch = open.createChannel();
+    const ch = await open.createChannel();
     await ch.assertQueue(q);
+    console.log(msg);
     const result = await ch.sendToQueue(q, Buffer.from(JSON.stringify(msg)));
     console.log(result);
     res.json({ result });
   } catch (error) {
-    console.warn(error);
+    console.log(error);
   }
 };
-
+app.use(express.json());
 app.post("/", async (req, res) => {
   await sendToQueue(req.body, res);
 });

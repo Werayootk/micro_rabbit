@@ -26,7 +26,7 @@ const startUp = async () => {
         console.log("Consumer: Connected to RabbitMQ");
       })
       .catch(console.warn);
-    const ch = conn.createChannel();
+    const ch = await conn.createChannel();
     ch.assertQueue(q).then(function (ok) {
       return ch.consume(q, async function (msg) {
         if (msg !== null) {
@@ -41,8 +41,8 @@ const startUp = async () => {
     console.warn(error);
   }
 };
-setTimeout(startUp, 30000);
-
+setTimeout(startUp, 40000);
+app.use(express.json());
 app.get("/", () => {
   res.json({
     message: "hello from consumer",

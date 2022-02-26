@@ -3,7 +3,7 @@ services:
   myRabbit:
     ports:
      - '5672:5672'
-    image: rabbitmq:3.8.1-management
+    image: rabbitmq:3.8.7-management
     environment:
       - RABBITMQ_DEFALUT_USER=admin
       - RABBITMQ_DEFALUT_PASS=admin
@@ -19,7 +19,7 @@ services:
   postgres_db:
     image: postgres
     ports:
-      - '5431:5431'
+      - '5432:5432'
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -42,12 +42,12 @@ services:
     ports:
       - '80:80'
     environment:
-      - PG_URI=postgres://postgres:postgres@postgres_db:5431/postgres
+      - PG_URI=postgres://postgres:postgres@postgres_db:5432/postgres
       - EXPRESS_PORT=80
       - RABBIT_URI=amqp://admin:admin@myRabbit:5672/myvhost
     depends_on:
       - myRabbit
-      - postgres_db
+      - mongo_db
 volumes:
   mydata : {}
     
