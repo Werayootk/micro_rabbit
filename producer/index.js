@@ -37,7 +37,7 @@ const sendToQueue = async (msg, res) => {
   }
 };
 
-app.get("/", async (req, res) => {
+app.post("/", async (req, res) => {
   await sendToQueue(req.body, res);
 });
 
